@@ -1,0 +1,23 @@
+# virtual environment - machine specific, rebuilt from requirements.txt
+.venv/
+venv/
+
+# the Showdown server - cloned separately, not part of this project
+pokemon-showdown/
+
+# python bytecode
+__pycache__/
+*.pyc
+
+# battle logs / replays
+logs/
+replays/
+*.log
+
+# editor
+.vscode/
+.idea/
+
+# os
+Thumbs.db
+.DS_Store
