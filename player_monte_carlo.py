@@ -5,6 +5,11 @@ from table_species_info import POKEDEX
 import calculations
 from pokemon import BattleMon
 
+'''to commit:
+git add .
+git commit -m "description"
+git push'''
+
 
 class monte_carlo_bot(Player):
 
