@@ -21,3 +21,6 @@ replays/
 # os
 Thumbs.db
 .DS_Store
+
+# files
+hidden.py

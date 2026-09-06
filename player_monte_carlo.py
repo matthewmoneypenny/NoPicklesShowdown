@@ -4,6 +4,7 @@ from table_defense_chart import DEFENSE_MATCHUP
 from table_species_info import POKEDEX
 import calculations
 from pokemon import BattleMon
+import traceback
 
 '''to commit:
 git add .
@@ -46,6 +47,7 @@ class monte_carlo_bot(Player):
 
 
     def choose_move(self, battle):
+
         try:
 
             self.setup(battle)
@@ -68,11 +70,8 @@ class monte_carlo_bot(Player):
 
             if not battle.available_moves:
                 return self.choose_random_move(battle)
-
-            #best_move = max(battle.available_moves, key=lambda move: move.base_power)
         
         except Exception:
-            import traceback
             traceback.print_exc()
             return self.choose_random_move(battle)
 
@@ -127,5 +126,10 @@ class monte_carlo_bot(Player):
         # also self.available_switches      
  
         return options
+
+    def refresh(self, battle):
+
+
+        return
 
 
