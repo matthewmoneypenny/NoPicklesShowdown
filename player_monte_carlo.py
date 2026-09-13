@@ -2,6 +2,7 @@ from poke_env import Player
 from calculations import damage
 from table_defense_chart import DEFENSE_MATCHUP
 from table_species_info import POKEDEX
+from table_random_sets import RANDOM_SETS
 import calculations
 from pokemon import BattleMon
 import traceback
@@ -54,8 +55,12 @@ class monte_carlo_bot(Player):
                     type_2 = DEFENSE_MATCHUP[POKEDEX[mon.species].types[1]]
                     weakness = {type: type_1[type] * type_2[type] for type in type_1}
 
-                self.opp_sets[battle.battle_tag][mon.species] = BattleMon(mon.species, calculations.stats_calc(mon.species, mon.level), weakness, mon.level, mon.moves, hp = 1.0, boosts = None, status = None)
+                
+                movelist = set()
+                for move in RANDOM_SETS[mon.species].sets:
+                    movelist.update(move.movepool)
 
+                self.opp_sets[battle.battle_tag][mon.species] = BattleMon(mon.species, calculations.stats_calc(mon.species, mon.level), weakness, mon.level, movelist, hp = 1.0, boosts = None, status = None)
         try:
 
             my_active = self.my_sets[battle.battle_tag][battle.active_pokemon.species]
