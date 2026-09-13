@@ -113,8 +113,10 @@ def damage(battle, attacking_mon, defending_mon, move):
         return 0 # if statement checking for miss in main bot function
         
 
-    random_roll = (85 + int(random.random() * 16))/100  # fix: right now max roll is 101 ?
+    #random_roll = (85 + int(random.random() * 16))/100  # fix: right now max roll is 101 ?
                                                         # Split into killing and non-killing rolls
+
+    random_roll = 1 # random should be done on rollouts
 
     attacker_boosted_stats = boost_stats(attacking_mon)
     defender_boosted_stats = boost_stats(defending_mon)

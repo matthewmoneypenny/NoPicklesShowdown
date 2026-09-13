@@ -16,7 +16,7 @@ async def main():
         account_configuration=AccountConfiguration(USERNAME, PASSWORD),
         server_configuration=ShowdownServerConfiguration,
         battle_format="gen9randombattle",
-        start_timer_on_battle_start=True,
+        start_timer_on_battle_start=False,
     )
     await bot.accept_challenges(None, 10)   # 10 battles before finishing
 
