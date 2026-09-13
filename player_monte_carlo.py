@@ -16,8 +16,8 @@ class monte_carlo_bot(Player):
 
     def setup(self, battle):
 
-            self.my_sets = {}
-            self.opp_sets = {}
+            self.my_sets[battle.battle_tag] = {}
+            self.opp_sets[battle.battle_tag] = {}
 
             for identifier, mon in battle.team.items(): # identifier = "p1: Great Tusk", mon = Pokemon object with information on it
 
@@ -29,9 +29,22 @@ class monte_carlo_bot(Player):
                     type_2 = DEFENSE_MATCHUP[POKEDEX[mon.species].types[1]]
                     weakness = {type: type_1[type] * type_2[type] for type in type_1}
 
-                self.my_sets[mon.species] = BattleMon(mon.species, calculations.stats_calc(mon.species, mon.level), weakness, mon.level, mon.moves, hp = 1.0, boosts = None, status = None)
+                self.my_sets[battle.battle_tag][mon.species] = BattleMon(mon.species, calculations.stats_calc(mon.species, mon.level), weakness, mon.level, mon.moves, hp = 1.0, boosts = None, status = None)
 
-            for identifier, mon in battle.opponent_team.items():
+            return
+
+
+    def choose_move(self, battle):
+
+        if not hasattr(self, "my_sets"):
+            self.my_sets = {}
+            self.opp_sets = {}
+
+        if battle.battle_tag not in self.my_sets:
+            self.setup(battle)
+
+        for identifier, mon in battle.opponent_team.items():
+            if mon.species not in self.opp_sets[battle.battle_tag]:
 
                 if len(POKEDEX[mon.species][1]) == 1:
                     weakness =  dict(DEFENSE_MATCHUP[POKEDEX[mon.species].types[0]])
@@ -41,20 +54,13 @@ class monte_carlo_bot(Player):
                     type_2 = DEFENSE_MATCHUP[POKEDEX[mon.species].types[1]]
                     weakness = {type: type_1[type] * type_2[type] for type in type_1}
 
-                self.opp_sets[mon.species] = BattleMon(mon.species, calculations.stats_calc(mon.species, mon.level), weakness, mon.level, mon.moves, hp = 1.0, boosts = None, status = None)
-
-            return
-
-
-    def choose_move(self, battle):
+                self.opp_sets[battle.battle_tag][mon.species] = BattleMon(mon.species, calculations.stats_calc(mon.species, mon.level), weakness, mon.level, mon.moves, hp = 1.0, boosts = None, status = None)
 
         try:
 
-            self.setup(battle)
+            my_active = self.my_sets[battle.battle_tag][battle.active_pokemon.species]
 
-            my_active = self.my_sets[battle.active_pokemon.species]
-
-            opp_active = self.opp_sets[battle.opponent_active_pokemon.species]
+            opp_active = self.opp_sets[battle.battle_tag][battle.opponent_active_pokemon.species]
 
             #move_list = self.get_options(battle)
 
@@ -73,14 +79,13 @@ class monte_carlo_bot(Player):
         
         except Exception:
             traceback.print_exc()
+            self.error_count = getattr(self, "error_count", 0) + 1
             return self.choose_random_move(battle)
 
 
         return self.create_order(best_move)
 
 
-
-    
         #options = self.get_options()
 
         #my_mon = battle.active_pokemon.species 
@@ -89,9 +94,6 @@ class monte_carlo_bot(Player):
         return #self.create_order(best_move)
 
     def next_turn(self, battle):
-        
-
-
         
 
         return
@@ -108,7 +110,7 @@ class monte_carlo_bot(Player):
 
 
         #my_hp = battle.active_pokemon.current_hp_fraction
-        opp_hp = battle.opponent_active_pokemon.current_hp_fraction
+        #opp_hp = battle.opponent_active_pokemon.current_hp_fraction
 
         #if opp_hp > 0:                  # + if speed is higher or - for lower
             #score = my_hp/opp_hp        # + dead pokemon

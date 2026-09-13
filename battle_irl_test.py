@@ -1,7 +1,6 @@
-from hidden import USERNAME, PASSWORD
-
 # This file was originally written by Claude.
 
+from hidden import USERNAME, PASSWORD
 import asyncio
 from player_monte_carlo import monte_carlo_bot
 from poke_env import AccountConfiguration
