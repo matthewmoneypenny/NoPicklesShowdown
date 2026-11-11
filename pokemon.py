@@ -1,16 +1,31 @@
-# This file/class was originally written by Claude. I was still learning classes and got stuck on how to handle data transfer across bot states
+# This file/class was originally written by Claude and further modified by me.
+
+from table_form_changes import FORM_CHANGES, BASE_FORMS
 
 class BattleMon:
 
-    def __init__(self, species, stats, weakness, level, moveset, hp=1.0, boosts=None, status=None):
+    def __init__(self, species, stats, weakness, level, moveset, base = None, hp = None, boosts = None, status = None, forms = None):
 
         self.species = species
         self.stats = stats            # {"hp":357, "atk":296, ...}
         self.weakness = weakness      # {"FIRE":2.0, "GRASS":0.25, ...}
         self.level = level
         self.moveset = moveset        # Friendly = 4 moves, enemy = randbat movelist
-        self.hp = hp                  # fraction, 1.0 = full
+
+        if hp is None: # Current HP
+            self.hp = stats["hp"]
+        else:
+            self.hp = hp
+
+        self.base = BASE_FORMS.get(species, species)
         self.status = status          # None, "brn", "par", ...      
+
+        if forms is None:
+            # Lookup logic here
+            self.forms = FORM_CHANGES.get(base, {})
+        else:
+            self.forms = forms
+
 
         if boosts:
             self.boosts = boosts
@@ -25,9 +40,11 @@ class BattleMon:
             self.weakness,
             self.level,
             self.moveset,
+            self.base,
             self.hp,
             dict(self.boosts),
             self.status,
+            self.forms,
         )
 
     def is_fainted(self):

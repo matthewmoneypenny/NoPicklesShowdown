@@ -30,7 +30,6 @@ def stats_calc(mon, level):
     for stat, base in zip(stat_list, POKEDEX[mon].stats):
 
         if stat == "hp":
-
             calc[stat] = floor(((2 * (base)) + IV + (EV//4)) * level/100) + level + 10 # instead have this calc loop then return a whole dict instead of one stat
 
         # other stats
@@ -82,27 +81,27 @@ def damage(battle, attacking_mon, defending_mon, move):
     if battle.weather:
 
         if Weather.SUNNYDAY in battle.weather:
-            if move.type.name == "FIRE":
+            if move.type == "FIRE":
                 weather = 1.5
-            if move.type.name == "WATER":
+            if move.type == "WATER":
                 weather = 0.5
 
 
         elif Weather.RAINDANCE in battle.weather:
-            if move.type.name == "WATER":
+            if move.type == "WATER":
                 weather = 1.5
-            if move.type.name == "FIRE":
+            if move.type == "FIRE":
                 weather = 0.5
 
-    if move.type.name in POKEDEX[attacking_mon.species].types:
+    if move.type in POKEDEX[attacking_mon.species].types:
         stab = 1.5
 
     burn = 1.0
     if attacking_mon.status == Status.BRN:
-        if move.category.name == "PHYSICAL":
+        if move.category == "PHYSICAL":
             burn = 0.5
 
-    effectiveness = defending_mon.weakness[move.type.name]
+    effectiveness = defending_mon.weakness[move.type]
 
     typing = stab * effectiveness
 
@@ -124,11 +123,11 @@ def damage(battle, attacking_mon, defending_mon, move):
     if random.random() < critical_chance:
         critical = critical_damage
 
-        if move.category.name == "PHYSICAL":
+        if move.category == "PHYSICAL":
             attack = max(attacker_boosted_stats['atk'], attacking_mon.stats['atk'])
             defense = min(defender_boosted_stats['def'], defending_mon.stats['def'])
 
-        elif move.category.name == "SPECIAL":
+        elif move.category == "SPECIAL":
             attack = max(attacker_boosted_stats['spa'], attacking_mon.stats['spa'])
             defense = min(defender_boosted_stats['spd'], defending_mon.stats['spd'])
 
@@ -136,11 +135,11 @@ def damage(battle, attacking_mon, defending_mon, move):
             return 0
 
     else:
-        if move.category.name == "PHYSICAL":
+        if move.category == "PHYSICAL":
             attack = attacker_boosted_stats['atk']
             defense = defender_boosted_stats['def']
 
-        elif move.category.name == "SPECIAL":
+        elif move.category == "SPECIAL":
             attack = attacker_boosted_stats['spa']
             defense = defender_boosted_stats['spd']
 
